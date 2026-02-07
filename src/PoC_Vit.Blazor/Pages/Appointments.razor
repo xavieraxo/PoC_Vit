@@ -1,0 +1,177 @@
+@page "/appointments"
+@attribute [Authorize]
+@using PoC_Vit.Blazor.Services
+@using PoC_Vit.Blazor.Models
+@inject ApiClient ApiClient
+
+<PageTitle>Turnos</PageTitle>
+
+<div class="appointments-container">
+    <RadzenCard>
+        <RadzenText TextStyle="TextStyle.H4" Style="margin-bottom: 1.5rem; color: #5A67D8;">
+            Crear Turno
+        </RadzenText>
+
+        @if (!string.IsNullOrEmpty(successMessage))
+        {
+            <RadzenAlert AlertStyle="AlertStyle.Success" Variant="Variant.Flat" Shade="Shade.Lighter" Style="margin-bottom: 1rem;">
+                @successMessage
+            </RadzenAlert>
+        }
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <RadzenAlert AlertStyle="AlertStyle.Danger" Variant="Variant.Flat" Shade="Shade.Lighter" Style="margin-bottom: 1rem;">
+                @errorMessage
+            </RadzenAlert>
+        }
+
+        <!-- Formulario -->
+        <RadzenStack Orientation="Orientation.Vertical" Gap="1.5rem">
+            <div>
+                <RadzenText TextStyle="TextStyle.Body2" Style="margin-bottom: 0.5rem;">ID del Profesional</RadzenText>
+                <RadzenNumeric @bind-Value="professionalId" 
+                              Placeholder="Ingrese el ID del profesional" 
+                              Style="width: 100%;" 
+                              Min="1" />
+            </div>
+
+            <RadzenRow Gap="1rem">
+                <RadzenColumn Size="12" SizeMD="6">
+                    <RadzenText TextStyle="TextStyle.Body2" Style="margin-bottom: 0.5rem;">Fecha</RadzenText>
+                    <RadzenDatePicker @bind-Value="selectedDate" 
+                                     DateFormat="dd/MM/yyyy" 
+                                     Style="width: 100%;" />
+                </RadzenColumn>
+                <RadzenColumn Size="12" SizeMD="6">
+                    <RadzenText TextStyle="TextStyle.Body2" Style="margin-bottom: 0.5rem;">Hora</RadzenText>
+                    <RadzenDatePicker @bind-Value="selectedTime" 
+                                     ShowTime="true" 
+                                     ShowTimeOkButton="true"
+                                     TimeOnly="true"
+                                     DateFormat="HH:mm" 
+                                     Style="width: 100%;" />
+                </RadzenColumn>
+            </RadzenRow>
+
+            <div>
+                <RadzenText TextStyle="TextStyle.Body2" Style="margin-bottom: 0.5rem;">Paciente (DNI o ID)</RadzenText>
+                <RadzenTextBox @bind-Value="bookedBy" 
+                              Placeholder="ej: dni:12345678" 
+                              Style="width: 100%;" />
+            </div>
+
+            <div>
+                <RadzenText TextStyle="TextStyle.Body2" Style="margin-bottom: 0.5rem;">Notas (opcional)</RadzenText>
+                <RadzenTextArea @bind-Value="notes" 
+                               Placeholder="Notas adicionales..." 
+                               Rows="4"
+                               Style="width: 100%;" />
+            </div>
+
+            <RadzenButton Text="Crear Turno" 
+                         Icon="event" 
+                         Click="CreateAppointment" 
+                         ButtonStyle="ButtonStyle.Primary"
+                         Disabled="@isLoading"
+                         Style="background: #5A67D8; width: fit-content;" />
+        </RadzenStack>
+
+        @if (isLoading)
+        {
+            <div style="margin-top: 1rem;">
+                <RadzenProgressBarCircular ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.Small" />
+                <span style="margin-left: 0.5rem;">Creando turno...</span>
+            </div>
+        }
+    </RadzenCard>
+</div>
+
+<style>
+    .appointments-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+</style>
+
+@code {
+    private long professionalId = 0;
+    private DateTime? selectedDate = DateTime.Today.AddDays(1);
+    private DateTime? selectedTime = DateTime.Today.AddHours(9);
+    private string bookedBy = "";
+    private string? notes = "";
+    private bool isLoading = false;
+    private string successMessage = "";
+    private string errorMessage = "";
+
+    private async Task CreateAppointment()
+    {
+        successMessage = "";
+        errorMessage = "";
+
+        // Validaciones
+        if (professionalId <= 0)
+        {
+            errorMessage = "Debe ingresar un ID de profesional válido.";
+            return;
+        }
+
+        if (selectedDate == null || selectedTime == null)
+        {
+            errorMessage = "Debe seleccionar fecha y hora.";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(bookedBy))
+        {
+            errorMessage = "Debe ingresar la identificación del paciente.";
+            return;
+        }
+
+        isLoading = true;
+
+        try
+        {
+            // Combinar fecha y hora
+            var dateOnly = DateOnly.FromDateTime(selectedDate.Value);
+            var timeOnly = TimeOnly.FromDateTime(selectedTime.Value);
+            var combinedDateTime = new DateTime(dateOnly.Year, dateOnly.Month, dateOnly.Day, 
+                                                timeOnly.Hour, timeOnly.Minute, 0, DateTimeKind.Utc);
+
+            var request = new AppointmentRequest
+            {
+                ProfessionalId = professionalId,
+                StartUtc = combinedDateTime,
+                BookedBy = bookedBy.Trim(),
+                Notes = string.IsNullOrWhiteSpace(notes) ? null : notes.Trim()
+            };
+
+            var (success, response, error) = await ApiClient.CreateAppointmentAsync(request);
+
+            if (success && response != null)
+            {
+                successMessage = $"✓ Turno creado exitosamente. ID: {response.AppointmentId}, Creado el: {response.CreatedAt:dd/MM/yyyy HH:mm}";
+                
+                // Limpiar formulario
+                professionalId = 0;
+                selectedDate = DateTime.Today.AddDays(1);
+                selectedTime = DateTime.Today.AddHours(9);
+                bookedBy = "";
+                notes = "";
+            }
+            else
+            {
+                errorMessage = $"Error al crear turno: {error}";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error inesperado: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}
+

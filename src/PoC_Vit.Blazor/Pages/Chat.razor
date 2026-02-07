@@ -1,0 +1,370 @@
+@page "/chat"
+@attribute [Authorize]
+@using PoC_Vit.Blazor.Services
+@inject ApiClient ApiClient
+@inject IJSRuntime JS
+@implements IDisposable
+
+<PageTitle>Chat</PageTitle>
+
+<div class="chat-container" tabindex="0" @onkeydown="HandleGlobalKeyDown" @ref="rootDiv">
+    <RadzenCard Style="height: 70vh; display: flex; flex-direction: column;">
+        <RadzenText TextStyle="TextStyle.H4" Style="margin-bottom: 1rem; color: #5A67D8;">
+            Chat con Asistente
+        </RadzenText>
+
+        <!-- Área de mensajes -->
+        <div class="messages-container" style="flex: 1; overflow-y: auto; padding: 1rem; background: #f9fafb; border-radius: 8px; margin-bottom: 1rem;">
+            @if (messages.Count == 0)
+            {
+                <div style="text-align: center; color: #9ca3af; margin-top: 2rem;">
+                    <p>¡Hola! Escribe un mensaje para comenzar...</p>
+                </div>
+            }
+            else
+            {
+                @foreach (var msg in messages)
+                {
+                    <div class="message @(msg.IsUser ? "message-user" : "message-assistant")">
+                        <div class="message-bubble">
+                            <strong>@(msg.IsUser ? "Tú" : "Asistente"):</strong>
+                            <p>@msg.Text</p>
+                        </div>
+                    </div>
+                }
+            }
+            @if (isLoading)
+            {
+                <div class="message message-assistant">
+                    <div class="message-bubble" style="padding: 1.5rem;">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem;">
+                            <RadzenProgressBarCircular ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.Small" />
+                            <span><strong>El asistente está pensando...</strong></span>
+                        </div>
+                        <div style="font-size: 0.875rem; color: #6b7280; margin-top: 0.5rem;">
+                            ⏱️ Esto puede tardar hasta 1 minuto en la primera consulta.<br/>
+                            <small>Ollama está procesando tu mensaje usando IA local (sin GPU puede ser lento).</small>
+                        </div>
+                        @if (loadingSeconds > 10)
+                        {
+                            <div style="margin-top: 0.5rem; color: #f59e0b;">
+                                ⚠️ Llevamos @loadingSeconds segundos... Por favor, sé paciente.
+                            </div>
+                        }
+                        @if (loadingSeconds > 30)
+                        {
+                            <div style="margin-top: 0.5rem; color: #10b981; font-size: 0.875rem;">
+                                ✓ Todo está funcionando correctamente, Ollama tarda en procesar modelos grandes.
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+
+        @if (isListening)
+        {
+            <div style="margin-bottom: 0.5rem; padding: 0.5rem 0.75rem; background:#FEF3C7; color:#92400E; border:1px solid #FDE68A; border-radius:8px; display:flex; align-items:center; gap:0.5rem;">
+                <span>🎙️ Micrófono activo. Hablá ahora… (Esc para detener)</span>
+            </div>
+        }
+
+        <!-- Input de mensaje -->
+        <div style="display: flex; gap: 0.5rem; align-items:center;">
+            <RadzenTextBox @bind-Value="currentMessage" 
+                          Placeholder="Escribe tu mensaje..." 
+                          Style="flex: 1;"
+                          @onkeydown="HandleKeyDown"
+                          Disabled="@isLoading" />
+            <RadzenButton Text="Enviar" 
+                         Click="SendMessage" 
+                         ButtonStyle="ButtonStyle.Primary" 
+                         Disabled="@(isLoading || string.IsNullOrWhiteSpace(currentMessage))"
+                         Style="background: #5A67D8;" />
+            @if (voiceSupported)
+            {
+                <RadzenButton ButtonStyle="ButtonStyle.Light" Click="ToggleMic" Disabled="@isLoading">
+                    @(isListening ? "⏹️ Detener" : "🎤 Hablar")
+                </RadzenButton>
+                <label class="ms-1" style="user-select:none;">
+                    <input type="checkbox" @bind="readAloud" /> 🔊 Leer respuesta
+                </label>
+            }
+        </div>
+    </RadzenCard>
+</div>
+
+<style>
+    .chat-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .messages-container {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .message {
+        display: flex;
+    }
+
+    .message-user {
+        justify-content: flex-end;
+    }
+
+    .message-assistant {
+        justify-content: flex-start;
+    }
+
+    .message-bubble {
+        max-width: 70%;
+        padding: 0.75rem 1rem;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .message-user .message-bubble {
+        background: #667EEA;
+        color: white;
+    }
+
+    .message-assistant .message-bubble {
+        background: white;
+        color: #1f2937;
+        border: 1px solid #e5e7eb;
+    }
+
+    .message-bubble p {
+        margin: 0.25rem 0 0 0;
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+</style>
+
+@code {
+    private string currentMessage = "";
+    private List<ChatMessage> messages = new();
+    private bool isLoading = false;
+    private Guid conversationId = Guid.Empty;
+    private int loadingSeconds = 0;
+    private System.Threading.Timer? loadingTimer;
+    private bool voiceSupported = false;
+    private bool isListening = false;
+    private bool readAloud = false;
+    private ElementReference rootDiv;
+
+    private class ChatMessage
+    {
+        public string Text { get; set; } = "";
+        public bool IsUser { get; set; }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Verificar soporte de voz
+            voiceSupported = await JS.InvokeAsync<bool>("voice.isSupported");
+            // Las callbacks JS de inicio/fin no son necesarias aquí; manejamos banner con isListening
+
+            // Foco para que los atajos funcionen (Alt+M, Esc)
+            await Task.Delay(50);
+            try { await rootDiv.FocusAsync(); } catch { }
+            StateHasChanged();
+        }
+    }
+
+    private async Task SendMessage()
+    {
+        if (string.IsNullOrWhiteSpace(currentMessage)) return;
+
+        var userMessage = currentMessage.Trim();
+        messages.Add(new ChatMessage { Text = userMessage, IsUser = true });
+        currentMessage = "";
+        isLoading = true;
+        loadingSeconds = 0;
+
+        // Iniciar contador de tiempo
+        loadingTimer = new System.Threading.Timer(_ =>
+        {
+            loadingSeconds++;
+            InvokeAsync(StateHasChanged);
+        }, null, 1000, 1000);
+
+        try
+        {
+            // Intento de NLU mínima: si detecta intent bien formado de "reservar turno", usa endpoint de turnos
+            var handled = await TryHandleAppointmentIntent(userMessage);
+            if (handled.handled)
+            {
+                var resultText = handled.success
+                    ? $"✅ Turno creado (ID: {handled.appointmentId})."
+                    : $"❌ No se pudo crear el turno: {handled.error}";
+                messages.Add(new ChatMessage { Text = resultText, IsUser = false });
+            }
+            else
+            {
+                var response = await ApiClient.SendChatAsync(userMessage, conversationId);
+                if (string.IsNullOrWhiteSpace(response))
+                {
+                    messages.Add(new ChatMessage {
+                        Text = "⚠️ No recibí respuesta del modelo. Por favor, intenta de nuevo.",
+                        IsUser = false
+                    });
+                }
+                else
+                {
+                    messages.Add(new ChatMessage { Text = response, IsUser = false });
+                    if (readAloud)
+                    {
+                        await JS.InvokeVoidAsync("voice.speak", response);
+                    }
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            messages.Add(new ChatMessage { 
+                Text = $"❌ Error: {ex.Message}\n\nSi el error persiste, verifica que Ollama esté funcionando correctamente.", 
+                IsUser = false 
+            });
+        }
+        finally
+        {
+            loadingTimer?.Dispose();
+            loadingTimer = null;
+            isLoading = false;
+            loadingSeconds = 0;
+        }
+    }
+
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !e.ShiftKey)
+        {
+            await SendMessage();
+        }
+    }
+
+    private async Task HandleGlobalKeyDown(KeyboardEventArgs e)
+    {
+        // Alt+M: toggle micrófono
+        if (e.AltKey && (e.Key == "m" || e.Key == "M"))
+        {
+            await ToggleMic();
+        }
+        // Esc: detener escucha
+        if (e.Key == "Escape" && isListening)
+        {
+            await StopMic();
+        }
+    }
+
+    private async Task ToggleMic()
+    {
+        if (!voiceSupported || isLoading) return;
+        if (!isListening)
+        {
+            isListening = true;
+            await JS.InvokeVoidAsync("voice.start", DotNetObjectReference.Create(this));
+        }
+        else
+        {
+            await StopMic();
+        }
+    }
+
+    private async Task StopMic()
+    {
+        await JS.InvokeVoidAsync("voice.stop");
+        isListening = false;
+        StateHasChanged();
+    }
+
+    [JSInvokable]
+    public async Task OnVoiceResult(string text)
+    {
+        if (string.IsNullOrWhiteSpace(text)) return;
+        currentMessage = text;
+        await SendMessage();
+    }
+
+    // NLU mínima: detecta frases del tipo
+    // "reservar turno [hoy|mañana|YYYY-MM-DD|dd/MM/yyyy] a las HH[:MM] con profesional ID N"
+    private async Task<(bool handled, bool success, long appointmentId, string error)> TryHandleAppointmentIntent(string input)
+    {
+        try
+        {
+            var normalized = input.Trim().ToLowerInvariant();
+            if (!normalized.StartsWith("reservar turno"))
+                return (false, false, 0, "");
+
+            // fecha: hoy/mañana/fecha explícita
+            DateTime startDateLocal = DateTime.Now.Date;
+            if (normalized.Contains("mañana"))
+                startDateLocal = DateTime.Now.Date.AddDays(1);
+            else if (normalized.Contains("hoy"))
+                startDateLocal = DateTime.Now.Date;
+            else
+            {
+                // intenta dd/mm/yyyy o yyyy-mm-dd
+                var m = System.Text.RegularExpressions.Regex.Match(normalized, @"(?<d>\d{1,2})[\/](?<m>\d{1,2})[\/](?<y>\d{4})");
+                if (m.Success)
+                {
+                    if (int.TryParse(m.Groups["d"].Value, out var d) && int.TryParse(m.Groups["m"].Value, out var mo) && int.TryParse(m.Groups["y"].Value, out var y))
+                        startDateLocal = new DateTime(y, mo, d);
+                }
+                else
+                {
+                    var m2 = System.Text.RegularExpressions.Regex.Match(normalized, @"(?<y>\d{4})-(?<m>\d{2})-(?<d>\d{2})");
+                    if (m2.Success)
+                    {
+                        if (int.TryParse(m2.Groups["d"].Value, out var d) && int.TryParse(m2.Groups["m"].Value, out var mo) && int.TryParse(m2.Groups["y"].Value, out var y))
+                            startDateLocal = new DateTime(y, mo, d);
+                    }
+                }
+            }
+
+            // hora: HH[:MM]
+            var hm = System.Text.RegularExpressions.Regex.Match(normalized, @"a las (?<h>\d{1,2})(:(?<min>\d{2}))?");
+            if (!hm.Success) return (false, false, 0, "");
+            var hour = int.Parse(hm.Groups["h"].Value);
+            var minute = hm.Groups["min"].Success ? int.Parse(hm.Groups["min"].Value) : 0;
+
+            // profesional id explícito (requerido en PoC para no tomar decisiones)
+            var pid = System.Text.RegularExpressions.Regex.Match(normalized, @"profesional id (?<id>\d+)");
+            if (!pid.Success) return (false, false, 0, "Falta 'profesional id N'. Ej: con profesional ID 1");
+            var professionalId = int.Parse(pid.Groups["id"].Value);
+
+            var startLocal = new DateTime(startDateLocal.Year, startDateLocal.Month, startDateLocal.Day, hour, minute, 0, DateTimeKind.Local);
+            var startUtc = startLocal.ToUniversalTime();
+
+            var req = new PoC_Vit.Blazor.Models.AppointmentRequest
+            {
+                ProfessionalId = professionalId,
+                StartUtc = startUtc,
+                BookedBy = "voz:usuario",
+                Notes = input
+            };
+
+            var (success, response, error) = await ApiClient.CreateAppointmentAsync(req);
+            if (success)
+            {
+                return (true, true, response?.AppointmentId ?? 0, "");
+            }
+            return (true, false, 0, error);
+        }
+        catch (Exception ex)
+        {
+            return (true, false, 0, ex.Message);
+        }
+    }
+
+    public void Dispose()
+    {
+        loadingTimer?.Dispose();
+    }
+}
+

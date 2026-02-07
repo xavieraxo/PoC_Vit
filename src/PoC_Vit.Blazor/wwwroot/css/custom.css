@@ -1,0 +1,134 @@
+/* Estilos personalizados para PoC Vit */
+
+:root {
+    --primary-color: #5A67D8;
+    --primary-hover: #667EEA;
+    --secondary-color: #f9fafb;
+    --border-color: #e5e7eb;
+    --text-dark: #1f2937;
+    --text-muted: #6b7280;
+}
+
+/* Mejoras generales */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Tarjetas con hover effect */
+.rz-card {
+    transition: all 0.3s ease;
+}
+
+.rz-card:hover {
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Botones personalizados */
+.rz-button-primary {
+    background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary-color) 100%);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.rz-button-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(90, 103, 216, 0.4);
+}
+
+/* Inputs con mejor apariencia */
+.rz-textbox,
+.rz-textarea,
+.rz-numeric,
+.rz-datepicker {
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    transition: border-color 0.3s ease;
+}
+
+.rz-textbox:focus,
+.rz-textarea:focus,
+.rz-numeric:focus,
+.rz-datepicker:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.1);
+}
+
+/* Tabla de datos */
+.rz-datatable {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.rz-datatable-thead {
+    background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary-color) 100%);
+    color: white;
+}
+
+.rz-datatable-row:hover {
+    background: var(--secondary-color);
+}
+
+/* Alertas */
+.rz-alert {
+    border-radius: 8px;
+    border-left: 4px solid;
+}
+
+.rz-alert-success {
+    border-left-color: #10b981;
+}
+
+.rz-alert-danger {
+    border-left-color: #ef4444;
+}
+
+.rz-alert-info {
+    border-left-color: var(--primary-color);
+}
+
+/* Animaciones de carga */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease;
+}
+
+/* Scrollbar personalizada */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--secondary-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+/* Responsive utilities */
+@media (max-width: 768px) {
+    .content {
+        padding: 1rem !important;
+    }
+    
+    .rz-card {
+        margin-bottom: 1rem;
+    }
+}
+

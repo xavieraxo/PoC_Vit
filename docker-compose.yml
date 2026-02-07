@@ -1,0 +1,109 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: poc_db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "${PG_PORT}:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./docker/db:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    networks: [poc_net]
+    restart: unless-stopped
+    
+  redis:
+    image: redis:alpine
+    container_name: poc_redis
+    networks: [poc_net]
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: poc_ollama
+    ports:
+      - "${OLLAMA_PORT}:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    # Healthcheck SIN curl (más robusto)
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    networks: [poc_net]
+    restart: unless-stopped
+
+  api:
+    build: ./src/Api
+    # container_name: poc_api
+    environment:
+      ASPNETCORE_URLS: "http://+:8081"
+      # 👇 Variables para usar OLLAMA (no OpenAI)
+      AI__Ollama__BaseUrl: "http://ollama:11434"
+      AI__ModelName: "${OLLAMA_MODEL}"
+      ConnectionStrings__Default: "Host=db;Port=5432;Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};Database=${POSTGRES_DB};Ssl Mode=Disable"
+      ConnectionStrings__Redis: "redis:6379"
+    expose:
+      - "8081"
+    depends_on:
+      db:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy   # si quitás healthcheck, cambiá a service_started
+    networks: [poc_net]
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=PathPrefix(`/api`)"
+      - "traefik.http.routers.api.entrypoints=web"
+      - "traefik.http.services.api.loadbalancer.server.port=8081"
+
+  blazor:
+    build: ./src/PoC_Vit.Blazor
+    container_name: poc_blazor
+    expose:
+      - "8080"
+    depends_on:
+      - api
+    networks: [poc_net]
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.blazor.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.blazor.entrypoints=web"
+      - "traefik.http.routers.blazor.priority=1"
+      - "traefik.http.services.blazor.loadbalancer.server.port=8080"
+
+  traefik:
+    image: traefik:v3.0
+    container_name: poc_traefik
+    command: ["--providers.docker=true"]
+    ports:
+      - "${TRAEFIK_HTTP_PORT}:80"
+      - "${TRAEFIK_HTTPS_PORT}:443"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./docker/traefik/traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./docker/traefik/dynamic.yml:/etc/traefik/dynamic.yml:ro
+    networks: [poc_net]
+    depends_on:
+      - db
+      - api
+    restart: unless-stopped
+
+networks:
+  poc_net:
+    name: poc_net   # 👈 fuerza el nombre de la red
+    driver: bridge
+
+volumes:
+  db_data: {}
+  ollama_data: {}

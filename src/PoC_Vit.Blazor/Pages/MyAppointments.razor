@@ -1,0 +1,104 @@
+@page "/my-appointments"
+@attribute [Authorize]
+@inject PoC_Vit.Blazor.Services.ApiClient Api
+@inject Radzen.NotificationService NotificationService
+@inject Radzen.DialogService DialogService
+@using PoC_Vit.Blazor.Models
+
+<div class="container py-4">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header" style="background: linear-gradient(135deg, #667EEA 0%, #5A67D8 100%); color: white;">
+            <h3 class="mb-0">
+                <i class="bi bi-calendar-range"></i> Mis Turnos
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-8">
+                    <label class="form-label fw-bold">Buscar por Documento o Nombre</label>
+                    <RadzenTextBox @bind-Value="bookedBy" Placeholder="Ej: dni:12345678" Style="width: 100%;" />
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <RadzenButton Click="CargarTurnos" Text="Buscar Mis Turnos" Icon="search" ButtonStyle="ButtonStyle.Primary" IsBusy="IsLoading" Style="width: 100%;" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (Appointments != null)
+    {
+        @if (Appointments.Count > 0)
+        {
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-0">
+                    <RadzenDataGrid AllowPaging="true" PageSize="10" Data="@Appointments" TItem="AppointmentSummary"
+                                    ColumnWidth="150px" EmptyText="No se encontraron turnos.">
+                        <Columns>
+                            <RadzenDataGridColumn TItem="AppointmentSummary" Property="ProfessionalName" Title="Profesional" />
+                            <RadzenDataGridColumn TItem="AppointmentSummary" Property="Specialty" Title="Especialidad" />
+                            <RadzenDataGridColumn TItem="AppointmentSummary" Property="StartUtc" Title="Fecha y Hora">
+                                <Template Context="data">
+                                    @data.StartUtc.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+                                </Template>
+                            </RadzenDataGridColumn>
+                            <RadzenDataGridColumn TItem="AppointmentSummary" Property="Notes" Title="Notas" />
+                            <RadzenDataGridColumn TItem="AppointmentSummary" Title="Acción" TextAlign="TextAlign.Center" Width="100px">
+                                <Template Context="data">
+                                    <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.Small" 
+                                                  Click="@(args => ConfirmarCancelacion(data))" />
+                                </Template>
+                            </RadzenDataGridColumn>
+                        </Columns>
+                    </RadzenDataGrid>
+                </div>
+            </div>
+        }
+        else if (!IsLoading)
+        {
+            <div class="alert alert-info py-4 text-center">
+                <i class="bi bi-info-circle fs-2 d-block mb-3"></i>
+                <h5>No tienes turnos reservados</h5>
+                <p class="mb-0">Verifica que el identificador ingresado sea el correcto.</p>
+            </div>
+        }
+    }
+</div>
+
+@code {
+    private string bookedBy = "";
+    private bool IsLoading = false;
+    private List<AppointmentSummary>? Appointments;
+
+    private async Task CargarTurnos()
+    {
+        if (string.IsNullOrWhiteSpace(bookedBy))
+        {
+            NotificationService.Notify(Radzen.NotificationSeverity.Warning, "Aviso", "Ingresa un identificador para buscar");
+            return;
+        }
+
+        IsLoading = true;
+        Appointments = await Api.GetAppointmentsAsync(bookedBy);
+        IsLoading = false;
+    }
+
+    private async Task ConfirmarCancelacion(AppointmentSummary appt)
+    {
+        var result = await DialogService.Confirm($"¿Estás seguro que deseas cancelar el turno con {appt.ProfessionalName} el {appt.StartUtc.ToLocalTime().ToString("dd/MM/yyyy HH:mm")}?", "Confirmar Cancelación", 
+            new Radzen.ConfirmOptions() { OkButtonText = "Sí, cancelar", CancelButtonText = "No" });
+
+        if (result == true)
+        {
+            var success = await Api.DeleteAppointmentAsync(appt.Id);
+            if (success)
+            {
+                NotificationService.Notify(Radzen.NotificationSeverity.Success, "Éxito", "Turno cancelado correctamente");
+                await CargarTurnos();
+            }
+            else
+            {
+                NotificationService.Notify(Radzen.NotificationSeverity.Error, "Error", "No se pudo cancelar el turno");
+            }
+        }
+    }
+}

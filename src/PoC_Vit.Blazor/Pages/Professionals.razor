@@ -1,0 +1,110 @@
+@page "/professionals"
+@attribute [Authorize]
+@using PoC_Vit.Blazor.Services
+@using PoC_Vit.Blazor.Models
+@inject ApiClient ApiClient
+
+<PageTitle>Profesionales</PageTitle>
+
+<div class="professionals-container">
+    <RadzenCard>
+        <RadzenText TextStyle="TextStyle.H4" Style="margin-bottom: 1.5rem; color: #5A67D8;">
+            Buscar Profesionales
+        </RadzenText>
+
+        <!-- Formulario de búsqueda -->
+        <RadzenStack Orientation="Orientation.Vertical" Gap="1rem" Style="margin-bottom: 2rem;">
+            <RadzenRow Gap="1rem">
+                <RadzenColumn Size="12" SizeMD="4">
+                    <RadzenText TextStyle="TextStyle.Body2" Style="margin-bottom: 0.5rem;">Plan</RadzenText>
+                    <RadzenTextBox @bind-Value="plan" Placeholder="ej: PLAN_300" Style="width: 100%;" />
+                </RadzenColumn>
+                <RadzenColumn Size="12" SizeMD="4">
+                    <RadzenText TextStyle="TextStyle.Body2" Style="margin-bottom: 0.5rem;">Especialidad</RadzenText>
+                    <RadzenTextBox @bind-Value="specialty" Placeholder="ej: Cardio" Style="width: 100%;" />
+                </RadzenColumn>
+                <RadzenColumn Size="12" SizeMD="4">
+                    <RadzenText TextStyle="TextStyle.Body2" Style="margin-bottom: 0.5rem;">Ciudad</RadzenText>
+                    <RadzenTextBox @bind-Value="city" Placeholder="ej: Buenos" Style="width: 100%;" />
+                </RadzenColumn>
+            </RadzenRow>
+
+            <RadzenButton Text="Buscar" 
+                         Icon="search" 
+                         Click="SearchProfessionals" 
+                         ButtonStyle="ButtonStyle.Primary"
+                         Disabled="@isLoading"
+                         Style="background: #5A67D8; width: fit-content;" />
+        </RadzenStack>
+
+        <!-- Resultados -->
+        @if (isLoading)
+        {
+            <div style="text-align: center; padding: 2rem;">
+                <RadzenProgressBarCircular ShowValue="false" Mode="ProgressBarMode.Indeterminate" Size="ProgressBarCircularSize.Medium" />
+                <p>Buscando profesionales...</p>
+            </div>
+        }
+        else if (searchPerformed)
+        {
+            @if (professionals.Count > 0)
+            {
+                <RadzenText TextStyle="TextStyle.H6" Style="margin-bottom: 1rem; color: #4b5563;">
+                    Se encontraron @professionals.Count profesionales
+                </RadzenText>
+
+                <RadzenDataGrid Data="@professionals" TItem="Professional" AllowPaging="true" PageSize="10">
+                    <Columns>
+                        <RadzenDataGridColumn TItem="Professional" Property="Id" Title="ID" Width="80px" />
+                        <RadzenDataGridColumn TItem="Professional" Property="Name" Title="Nombre" />
+                        <RadzenDataGridColumn TItem="Professional" Property="Specialty" Title="Especialidad" />
+                        <RadzenDataGridColumn TItem="Professional" Property="City" Title="Ciudad" />
+                        <RadzenDataGridColumn TItem="Professional" Property="Address" Title="Dirección" />
+                    </Columns>
+                </RadzenDataGrid>
+            }
+            else
+            {
+                <RadzenAlert AlertStyle="AlertStyle.Info" Variant="Variant.Flat" Shade="Shade.Lighter">
+                    No se encontraron profesionales con los criterios especificados.
+                </RadzenAlert>
+            }
+        }
+    </RadzenCard>
+</div>
+
+<style>
+    .professionals-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+</style>
+
+@code {
+    private string plan = "";
+    private string specialty = "";
+    private string city = "";
+    private List<Professional> professionals = new();
+    private bool isLoading = false;
+    private bool searchPerformed = false;
+
+    private async Task SearchProfessionals()
+    {
+        isLoading = true;
+        searchPerformed = true;
+
+        try
+        {
+            professionals = await ApiClient.SearchProfessionalsAsync(plan, specialty, city);
+        }
+        catch (Exception)
+        {
+            professionals = new List<Professional>();
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}
+

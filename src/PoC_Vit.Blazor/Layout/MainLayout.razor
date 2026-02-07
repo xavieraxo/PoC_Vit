@@ -1,0 +1,19 @@
+﻿@inherits LayoutComponentBase
+
+<RadzenComponents />
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4" style="background: #f9fafb; border-bottom: 1px solid #e5e7eb;">
+            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank" style="color: #5A67D8;">Documentación</a>
+        </div>
+
+        <article class="content px-4" style="padding-top: 2rem;">
+            @Body
+        </article>
+    </main>
+</div>

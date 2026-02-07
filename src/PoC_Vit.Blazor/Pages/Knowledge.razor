@@ -1,0 +1,279 @@
+@page "/knowledge"
+@attribute [Authorize]
+@inject ApiClient Api
+
+<div class="container py-4">
+    <div class="card shadow-sm">
+        <div class="card-header" style="background: linear-gradient(135deg, #667EEA 0%, #5A67D8 100%); color: white;">
+            <h3 class="mb-0">
+                <i class="bi bi-book"></i> Cargar Conocimiento
+            </h3>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <label class="form-label fw-bold">Título del Documento</label>
+                <input @bind="Title" class="form-control" placeholder="Ej: FAQ SaludPlus, Cartilla Médica 2025" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-bold">Contenido</label>
+                <textarea @bind="Content" class="form-control" rows="12" 
+                          placeholder="Pega aquí el texto de la FAQ o cualquier contenido que quieras agregar al sistema..."></textarea>
+                <small class="text-muted">El texto se dividirá automáticamente en fragmentos para procesamiento.</small>
+            </div>
+
+            <div class="d-flex gap-2 mb-3">
+                <button class="btn btn-primary" @onclick="Ingestar" disabled="@IsLoading">
+                    @if (IsLoading)
+                    {
+                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        <span>Procesando...</span>
+                    }
+                    else
+                    {
+                        <i class="bi bi-cloud-upload"></i>
+                        <span>Ingestar Texto</span>
+                    }
+                </button>
+                <button class="btn btn-outline-secondary" @onclick="Limpiar" disabled="@IsLoading">
+                    <i class="bi bi-x-circle"></i> Limpiar
+                </button>
+            </div>
+
+            <hr />
+
+            <div class="mb-3">
+                <h5 class="mb-3">
+                    <i class="bi bi-file-earmark-arrow-up"></i> O subir archivo .txt
+                </h5>
+                <InputFile OnChange="OnFileSelected" Accept=".txt" class="form-control" disabled="@IsLoading" />
+                <small class="text-muted">Tamaño máximo: 10 MB</small>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Status))
+            {
+                <div class="alert @StatusClass mt-3" role="alert">
+                    <strong>@StatusIcon</strong> @Status
+                </div>
+            }
+
+            @if (LastDocumentId.HasValue)
+            {
+                <div class="card bg-light mt-3">
+                    <div class="card-body">
+                        <h6 class="card-title">✅ Documento Ingresado</h6>
+                        <ul class="mb-0">
+                            <li><strong>Document ID:</strong> @LastDocumentId</li>
+                            <li><strong>Fragmentos creados:</strong> @LastChunks</li>
+                            <li><strong>Fecha:</strong> @DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")</li>
+                        </ul>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="card shadow-sm mt-4">
+        <div class="card-header bg-dark text-white">
+            <h4 class="mb-0">
+                <i class="bi bi-list-ul"></i> Documentos Cargados
+            </h4>
+        </div>
+        <div class="card-body p-0">
+            <RadzenDataGrid AllowPaging="true" PageSize="5" Data="@Documents" TItem="DocumentSummary" 
+                            IsLoading="@LoadingDocuments" EmptyText="No hay documentos cargados.">
+                <Columns>
+                    <RadzenDataGridColumn TItem="DocumentSummary" Property="Title" Title="Título" />
+                    <RadzenDataGridColumn TItem="DocumentSummary" Property="Type" Title="Tipo" Width="100px" />
+                    <RadzenDataGridColumn TItem="DocumentSummary" Property="UpdatedAt" Title="Última Actualización">
+                        <Template Context="data">
+                            @data.UpdatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="DocumentSummary" Title="Acción" TextAlign="TextAlign.Center" Width="100px">
+                        <Template Context="data">
+                            <RadzenButton Icon="delete" ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.Small" 
+                                          Click="@(args => ConfirmarEliminar(data))" />
+                        </Template>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-info-circle"></i> Información
+                </h5>
+            </div>
+            <div class="card-body">
+                <h6>¿Qué hace esta página?</h6>
+                <p>Esta funcionalidad permite cargar conocimiento al sistema de <strong>RAG (Retrieval-Augmented Generation)</strong>.</p>
+                
+                <h6>¿Cómo funciona?</h6>
+                <ol>
+                    <li>El texto que ingreses se divide en <strong>fragmentos (chunks)</strong> pequeños</li>
+                    <li>Cada fragmento se convierte en un <strong>embedding vectorial</strong> usando Ollama</li>
+                    <li>Los vectores se almacenan en <strong>PostgreSQL con pgvector</strong></li>
+                    <li>Cuando hagas preguntas en el chat RAG, el sistema buscará los fragmentos más relevantes</li>
+                </ol>
+
+                <h6>Ejemplos de uso:</h6>
+                <ul>
+                    <li>📋 Cargar FAQs de la obra social</li>
+                    <li>📘 Subir cartillas médicas</li>
+                    <li>📄 Agregar políticas y procedimientos</li>
+                    <li>🏥 Información sobre coberturas y planes</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string Title = "FAQ SaludPlus";
+    private string Content = "";
+    private string Status = "";
+    private bool IsLoading = false;
+    private long? LastDocumentId = null;
+    private int LastChunks = 0;
+
+    private List<DocumentSummary> Documents = new();
+    private bool LoadingDocuments = false;
+
+    [inject] private Radzen.DialogService DialogService { get; set; } = default!;
+    [inject] private Radzen.NotificationService NotificationService { get; set; } = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarDocumentos();
+    }
+
+    private async Task CargarDocumentos()
+    {
+        LoadingDocuments = true;
+        Documents = await Api.GetDocumentsAsync();
+        LoadingDocuments = false;
+    }
+
+    private string StatusClass => Status.StartsWith("ERROR") || Status.Contains("⚠️") 
+        ? "alert-danger" 
+        : "alert-success";
+    
+    private string StatusIcon => Status.StartsWith("ERROR") || Status.Contains("⚠️") 
+        ? "⚠️" 
+        : "✅";
+
+    private async Task Ingestar()
+    {
+        if (string.IsNullOrWhiteSpace(Title))
+        {
+            Status = "⚠️ Por favor ingresa un título para el documento";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(Content))
+        {
+            Status = "⚠️ Por favor ingresa o carga contenido para procesar";
+            return;
+        }
+
+        IsLoading = true;
+        Status = "Procesando... Esto puede tomar unos momentos.";
+        StateHasChanged();
+
+        try
+        {
+            var (docId, chunks) = await Api.IngestTextAsync(Title, Content, "faq");
+            LastDocumentId = docId;
+            LastChunks = chunks;
+            Status = $"✅ Documento ingresado correctamente. ID: {docId}, Fragmentos: {chunks}";
+            await CargarDocumentos(); // Actualizar lista
+        }
+        catch (Exception ex)
+        {
+            Status = $"ERROR: {ex.Message}";
+            LastDocumentId = null;
+            LastChunks = 0;
+        }
+        finally
+        {
+            IsLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task OnFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file is null) return;
+
+        // Verificar tamaño (10 MB max)
+        if (file.Size > 10 * 1024 * 1024)
+        {
+            Status = "⚠️ El archivo es demasiado grande. Tamaño máximo: 10 MB";
+            return;
+        }
+
+        IsLoading = true;
+        Status = "Cargando archivo...";
+        StateHasChanged();
+
+        try
+        {
+            using var stream = file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024);
+            using var reader = new StreamReader(stream);
+            Content = await reader.ReadToEndAsync();
+            
+            // Usar el nombre del archivo como título si está vacío
+            if (string.IsNullOrWhiteSpace(Title) || Title == "FAQ SaludPlus")
+            {
+                Title = Path.GetFileNameWithoutExtension(file.Name);
+            }
+
+            Status = $"✅ Archivo '{file.Name}' cargado correctamente. {Content.Length} caracteres.";
+        }
+        catch (Exception ex)
+        {
+            Status = $"ERROR al cargar archivo: {ex.Message}";
+            Content = "";
+        }
+        finally
+        {
+            IsLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task ConfirmarEliminar(DocumentSummary doc)
+    {
+        var result = await DialogService.Confirm($"¿Estás seguro que deseas eliminar '{doc.Title}'? Se borrarán todos sus fragmentos de conocimiento.", "Confirmar Eliminación", 
+            new Radzen.ConfirmOptions() { OkButtonText = "Eliminar", CancelButtonText = "Cancelar" });
+
+        if (result == true)
+        {
+            var success = await Api.DeleteDocumentAsync(doc.Id);
+            if (success)
+            {
+                NotificationService.Notify(Radzen.NotificationSeverity.Success, "Éxito", "Documento eliminado");
+                await CargarDocumentos();
+            }
+            else
+            {
+                NotificationService.Notify(Radzen.NotificationSeverity.Error, "Error", "No se pudo eliminar el documento");
+            }
+        }
+    }
+
+    private void Limpiar()
+    {
+        Title = "FAQ SaludPlus";
+        Content = "";
+        Status = "";
+        LastDocumentId = null;
+        LastChunks = 0;
+    }
+}
+

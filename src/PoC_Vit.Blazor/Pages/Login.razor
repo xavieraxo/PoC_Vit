@@ -1,0 +1,101 @@
+@page "/login"
+@inject PoC_Vit.Blazor.Services.AuthService AuthService
+@inject NavigationManager NavigationManager
+@inject Radzen.NotificationService NotificationService
+
+<div class="container d-flex align-items-center justify-content-center" style="min-height: 80vh;">
+    <div class="card shadow-lg" style="width: 100%; max-width: 400px; border-radius: 15px; overflow: hidden;">
+        <div class="card-header text-center py-4" style="background: linear-gradient(135deg, #667EEA 0%, #5A67D8 100%); border: none;">
+            <h2 class="text-white mb-0 fw-bold">PoC Vit</h2>
+            <p class="text-white-50 small mb-0">Portal de Acceso</p>
+        </div>
+        <div class="card-body p-4">
+            <EditForm Model="@loginModel" OnValidSubmit="HandleLogin">
+                <DataAnnotationsValidator />
+                
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Usuario</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0 text-muted">
+                            <i class="bi bi-person"></i>
+                        </span>
+                        <RadzenTextBox @bind-Value="loginModel.Username" Placeholder="Ingresa tu usuario" 
+                                      Style="width: 100%; border-top-left-radius: 0; border-bottom-left-radius: 0;" />
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold">Contraseña</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0 text-muted">
+                            <i class="bi bi-lock"></i>
+                        </span>
+                        <RadzenPassword @bind-Value="loginModel.Password" Placeholder="Ingresa tu contraseña" 
+                                        Style="width: 100%; border-top-left-radius: 0; border-bottom-left-radius: 0;" />
+                    </div>
+                </div>
+
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <div class="alert alert-danger py-2 small mb-3">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i> @errorMessage
+                    </div>
+                }
+
+                <RadzenButton ButtonType="Radzen.ButtonType.Submit" Text="Iniciar Sesión" 
+                              IsBusy="IsLoading" ButtonStyle="Radzen.ButtonStyle.Primary" 
+                              Style="width: 100%; border-radius: 10px; height: 45px;" />
+            </EditForm>
+        </div>
+        <div class="card-footer bg-white border-top-0 text-center py-3">
+            <p class="mb-0 text-muted small">
+                ¿No tienes cuenta? <span class="text-primary pointer">Contacta al administrador</span>
+            </p>
+        </div>
+    </div>
+</div>
+
+@code {
+    private LoginModel loginModel = new();
+    private bool IsLoading = false;
+    private string errorMessage = "";
+
+    private async Task HandleLogin()
+    {
+        if (string.IsNullOrWhiteSpace(loginModel.Username) || string.IsNullOrWhiteSpace(loginModel.Password))
+        {
+            errorMessage = "Ingresa usuario y contraseña";
+            return;
+        }
+
+        IsLoading = true;
+        errorMessage = "";
+
+        var success = await AuthService.LoginAsync(loginModel.Username, loginModel.Password);
+
+        if (success)
+        {
+            NotificationService.Notify(Radzen.NotificationSeverity.Success, "Bienvenido", $"¡Hola de nuevo!");
+            NavigationManager.NavigateTo("");
+        }
+        else
+        {
+            errorMessage = "Usuario o contraseña incorrectos";
+            NotificationService.Notify(Radzen.NotificationSeverity.Error, "Error", "Acceso denegado");
+        }
+
+        IsLoading = false;
+    }
+
+    public class LoginModel
+    {
+        public string Username { get; set; } = "";
+        public string Password { get; set; } = "";
+    }
+}
+
+<style>
+    .pointer { cursor: pointer; }
+    .input-group-text { border-right: none !important; }
+    .rz-textbox, .rz-password { border-left: none !important; }
+</style>

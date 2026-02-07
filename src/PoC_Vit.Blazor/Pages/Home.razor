@@ -1,0 +1,104 @@
+﻿@page "/"
+
+<PageTitle>Inicio</PageTitle>
+
+<div class="home-container">
+    <RadzenCard Style="text-align: center; padding: 3rem; background: linear-gradient(135deg, #667EEA 0%, #5A67D8 100%); color: white;">
+        <RadzenText TextStyle="TextStyle.H3" Style="margin-bottom: 1rem; font-weight: 600;">
+            Bienvenido al Sistema de Salud PoC Vit
+        </RadzenText>
+        <RadzenText TextStyle="TextStyle.Body1">
+            Sistema integral de gestión de turnos y profesionales de salud
+        </RadzenText>
+    </RadzenCard>
+
+    <RadzenRow Gap="2rem" Style="margin-top: 2rem;">
+        <RadzenColumn Size="12" SizeMD="4">
+            <RadzenCard Style="height: 100%; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s; cursor: pointer;"
+                       @onclick="@(() => NavigateTo("/chat"))">
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; color: #667EEA; margin-bottom: 1rem;">💬</div>
+                    <RadzenText TextStyle="TextStyle.H6" Style="color: #5A67D8; margin-bottom: 0.5rem;">
+                        Chat con Asistente
+                    </RadzenText>
+                    <RadzenText TextStyle="TextStyle.Body2" Style="color: #6b7280;">
+                        Consulta con nuestro asistente virtual impulsado por IA para responder tus dudas sobre la obra social.
+                    </RadzenText>
+                </div>
+            </RadzenCard>
+        </RadzenColumn>
+
+        <RadzenColumn Size="12" SizeMD="4">
+            <RadzenCard Style="height: 100%; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s; cursor: pointer;"
+                       @onclick="@(() => NavigateTo("/professionals"))">
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; color: #667EEA; margin-bottom: 1rem;">👨‍⚕️</div>
+                    <RadzenText TextStyle="TextStyle.H6" Style="color: #5A67D8; margin-bottom: 0.5rem;">
+                        Buscar Profesionales
+                    </RadzenText>
+                    <RadzenText TextStyle="TextStyle.Body2" Style="color: #6b7280;">
+                        Encuentra profesionales de salud por plan, especialidad y ciudad.
+                    </RadzenText>
+                </div>
+            </RadzenCard>
+        </RadzenColumn>
+
+        <RadzenColumn Size="12" SizeMD="4">
+            <RadzenCard Style="height: 100%; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.2s; cursor: pointer;"
+                       @onclick="@(() => NavigateTo("/appointments"))">
+                <div style="text-align: center;">
+                    <div style="font-size: 3rem; color: #667EEA; margin-bottom: 1rem;">📅</div>
+                    <RadzenText TextStyle="TextStyle.H6" Style="color: #5A67D8; margin-bottom: 0.5rem;">
+                        Gestión de Turnos
+                    </RadzenText>
+                    <RadzenText TextStyle="TextStyle.Body2" Style="color: #6b7280;">
+                        Reserva y gestiona tus citas médicas de manera rápida y sencilla.
+                    </RadzenText>
+                </div>
+            </RadzenCard>
+        </RadzenColumn>
+    </RadzenRow>
+
+    <RadzenCard Style="margin-top: 2rem; background: #f9fafb; border: 1px solid #e5e7eb;">
+        <RadzenText TextStyle="TextStyle.H6" Style="color: #5A67D8; margin-bottom: 1rem;">
+            Características del Sistema
+        </RadzenText>
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeMD="6">
+                <ul style="color: #4b5563;">
+                    <li style="margin-bottom: 0.5rem;">✓ Asistente virtual con IA (Ollama)</li>
+                    <li style="margin-bottom: 0.5rem;">✓ Búsqueda avanzada de profesionales</li>
+                    <li style="margin-bottom: 0.5rem;">✓ Sistema de turnos en tiempo real</li>
+                </ul>
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="6">
+                <ul style="color: #4b5563;">
+                    <li style="margin-bottom: 0.5rem;">✓ Interfaz moderna y responsive</li>
+                    <li style="margin-bottom: 0.5rem;">✓ Integración con PostgreSQL + pgvector</li>
+                    <li style="margin-bottom: 0.5rem;">✓ API REST con .NET 9</li>
+                </ul>
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenCard>
+</div>
+
+<style>
+    .home-container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .rz-card:hover {
+        transform: translateY(-4px);
+    }
+</style>
+
+@code {
+    [Inject]
+    private NavigationManager? Navigation { get; set; }
+
+    private void NavigateTo(string path)
+    {
+        Navigation?.NavigateTo(path);
+    }
+}
