@@ -1123,3 +1123,5 @@ E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\PoC_
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\jfyiojd1vi-djkb8ja077.gz
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\2v8jredsx8-1jvo89y8nv.gz
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\9ho9hb47j7-ss6q2hw0j2.gz
+E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\rpswa.dswa.cache.json
+E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\PoC_Vit.Blazor.sourcelink.json
