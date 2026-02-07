@@ -4,6 +4,8 @@ build_property.EnableSingleFileAnalyzer =
 build_property.EnableTrimAnalyzer = false
 build_property.IncludeAllContentForSelfExtract = 
 build_property.TargetFramework = net9.0
+build_property.TargetFrameworkIdentifier = .NETCoreApp
+build_property.TargetFrameworkVersion = v9.0
 build_property.TargetPlatformMinVersion = 
 build_property.UsingMicrosoftNETSdkWeb = 
 build_property.ProjectTypeGuids = 
@@ -28,6 +30,10 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[E:/Proyectos/PoC_Vit/src/PoC_Vit.Blazor/Layout/RedirectToLogin.razor]
+build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XFJlZGlyZWN0VG9Mb2dpbi5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [E:/Proyectos/PoC_Vit/src/PoC_Vit.Blazor/Pages/Appointments.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXBwb2ludG1lbnRzLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
@@ -46,6 +52,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [E:/Proyectos/PoC_Vit/src/PoC_Vit.Blazor/Pages/Knowledge.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcS25vd2xlZGdlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Proyectos/PoC_Vit/src/PoC_Vit.Blazor/Pages/Login.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW4ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[E:/Proyectos/PoC_Vit/src/PoC_Vit.Blazor/Pages/MyAppointments.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTXlBcHBvaW50bWVudHMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/Proyectos/PoC_Vit/src/PoC_Vit.Blazor/Pages/Professionals.razor]
