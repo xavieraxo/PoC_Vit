@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "pXg5X2Zz3dI=",
+  "dgSpecHash": "UE1BypikMas=",
   "success": true,
   "projectFilePath": "E:\\Proyectos\\PoC_Vit\\src\\PoC_Vit.Blazor\\PoC_Vit.Blazor.csproj",
   "expectedPackageFiles": [
@@ -29,10 +29,10 @@
     "C:\\Users\\NoxiePC\\.nuget\\packages\\microsoft.extensions.primitives\\9.0.9\\microsoft.extensions.primitives.9.0.9.nupkg.sha512",
     "C:\\Users\\NoxiePC\\.nuget\\packages\\microsoft.jsinterop\\9.0.9\\microsoft.jsinterop.9.0.9.nupkg.sha512",
     "C:\\Users\\NoxiePC\\.nuget\\packages\\microsoft.jsinterop.webassembly\\9.0.2\\microsoft.jsinterop.webassembly.9.0.2.nupkg.sha512",
-    "C:\\Users\\NoxiePC\\.nuget\\packages\\microsoft.net.illink.tasks\\9.0.11\\microsoft.net.illink.tasks.9.0.11.nupkg.sha512",
-    "C:\\Users\\NoxiePC\\.nuget\\packages\\microsoft.net.sdk.webassembly.pack\\10.0.0\\microsoft.net.sdk.webassembly.pack.10.0.0.nupkg.sha512",
+    "C:\\Users\\NoxiePC\\.nuget\\packages\\microsoft.net.illink.tasks\\9.0.12\\microsoft.net.illink.tasks.9.0.12.nupkg.sha512",
+    "C:\\Users\\NoxiePC\\.nuget\\packages\\microsoft.net.sdk.webassembly.pack\\10.0.2\\microsoft.net.sdk.webassembly.pack.10.0.2.nupkg.sha512",
     "C:\\Users\\NoxiePC\\.nuget\\packages\\radzen.blazor\\8.0.4\\radzen.blazor.8.0.4.nupkg.sha512",
-    "C:\\Users\\NoxiePC\\.nuget\\packages\\microsoft.netcore.app.runtime.mono.browser-wasm\\9.0.11\\microsoft.netcore.app.runtime.mono.browser-wasm.9.0.11.nupkg.sha512"
+    "C:\\Users\\NoxiePC\\.nuget\\packages\\microsoft.netcore.app.runtime.mono.browser-wasm\\9.0.12\\microsoft.netcore.app.runtime.mono.browser-wasm.9.0.12.nupkg.sha512"
   ],
   "logs": []
 }
