@@ -202,8 +202,6 @@ E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\icud
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\icudt_EFIGS.tptq2av103.dat
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\icudt_no_CJK.lfu7j35m59.dat
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\segmentation-rules.json
-E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\PoC_Vit.Blazor.q0g7wfjlwv.wasm
-E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\PoC_Vit.Blazor.892dbzbt5w.pdb
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\blazor.boot.json
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\blazor.webassembly.js.gz
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\Microsoft.AspNetCore.Authorization.z6jo10m0rd.wasm.gz
@@ -409,8 +407,6 @@ E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\icud
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\icudt_EFIGS.tptq2av103.dat.gz
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\icudt_no_CJK.lfu7j35m59.dat.gz
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\segmentation-rules.json.gz
-E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\PoC_Vit.Blazor.q0g7wfjlwv.wasm.gz
-E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\PoC_Vit.Blazor.892dbzbt5w.pdb.gz
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\blazor.boot.json.gz
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\PoC_Vit.Blazor.staticwebassets.runtime.json
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\PoC_Vit.Blazor.staticwebassets.endpoints.json
@@ -1119,9 +1115,6 @@ E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\masyffvz4r-{
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\wyeko7u2fs-{0}-tptq2av103-tptq2av103.gz
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\7ljodm4hhb-{0}-lfu7j35m59-lfu7j35m59.gz
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\9flnnlstlr-{0}-ec9yy67949-ec9yy67949.gz
-E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\sptxb8xvdb-{0}-q0g7wfjlwv-q0g7wfjlwv.gz
-E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\p96zi1o4b1-{0}-892dbzbt5w-892dbzbt5w.gz
-E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\9ho9hb47j7-{0}-z5ozeolknw-z5ozeolknw.gz
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\staticwebassets.build.json
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\staticwebassets.build.json.cache
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\staticwebassets.development.json
@@ -1132,3 +1125,10 @@ E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\PoC_Vit.Blazor.dll
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\refint\PoC_Vit.Blazor.dll
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\PoC_Vit.Blazor.pdb
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\ref\PoC_Vit.Blazor.dll
+E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\PoC_Vit.Blazor.i32jbimehv.wasm
+E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\PoC_Vit.Blazor.55u76c8grv.pdb
+E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\PoC_Vit.Blazor.i32jbimehv.wasm.gz
+E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\PoC_Vit.Blazor.55u76c8grv.pdb.gz
+E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\sptxb8xvdb-{0}-i32jbimehv-i32jbimehv.gz
+E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\p96zi1o4b1-{0}-55u76c8grv-55u76c8grv.gz
+E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\9ho9hb47j7-{0}-3p8a5mymdn-3p8a5mymdn.gz
