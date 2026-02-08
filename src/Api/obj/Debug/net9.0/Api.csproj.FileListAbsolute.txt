@@ -39,4 +39,3 @@ E:\Proyectos\PoC_Vit\src\Api\obj\Debug\net9.0\rjsmrazor.dswa.cache.json
 E:\Proyectos\PoC_Vit\src\Api\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
 E:\Proyectos\PoC_Vit\src\Api\obj\Debug\net9.0\staticwebassets.build.json.cache
 E:\Proyectos\PoC_Vit\src\Api\obj\Debug\net9.0\swae.build.ex.cache
-E:\Proyectos\PoC_Vit\src\Api\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
