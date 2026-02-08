@@ -143,8 +143,8 @@
     private List<DocumentSummary> Documents = new();
     private bool LoadingDocuments = false;
 
-    [inject] private Radzen.DialogService DialogService { get; set; } = default!;
-    [inject] private Radzen.NotificationService NotificationService { get; set; } = default!;
+    [Inject] private Radzen.DialogService DialogService { get; set; } = default!;
+    [Inject] private Radzen.NotificationService NotificationService { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
