@@ -40,3 +40,5 @@ E:\Proyectos\PoC_Vit\src\Api\obj\Debug\net9.0\refint\Api.dll
 E:\Proyectos\PoC_Vit\src\Api\obj\Debug\net9.0\Api.pdb
 E:\Proyectos\PoC_Vit\src\Api\obj\Debug\net9.0\Api.genruntimeconfig.cache
 E:\Proyectos\PoC_Vit\src\Api\obj\Debug\net9.0\ref\Api.dll
+E:\Proyectos\PoC_Vit\src\Api\bin\Debug\net9.0\appsettings.Development.json
+E:\Proyectos\PoC_Vit\src\Api\bin\Debug\net9.0\appsettings.json
