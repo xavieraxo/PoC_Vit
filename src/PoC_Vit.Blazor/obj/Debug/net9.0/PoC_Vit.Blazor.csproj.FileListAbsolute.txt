@@ -654,8 +654,6 @@ E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\dotn
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\dotnet.native.y68cfu4kuf.wasm
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\dotnet.runtime.hv7sykez1z.js
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\segmentation-rules.json
-E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\PoC_Vit.Blazor.5zwgon9j89.wasm
-E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\PoC_Vit.Blazor.rktyb9cnc7.pdb
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\Microsoft.AspNetCore.Components.Authorization.5ja82b9mxc.wasm.gz
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\Microsoft.CSharp.aiisld9zgk.wasm.gz
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\Microsoft.VisualBasic.Core.pnarh8esv1.wasm.gz
@@ -830,8 +828,6 @@ E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\dotn
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\dotnet.native.y68cfu4kuf.wasm.gz
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\dotnet.runtime.hv7sykez1z.js.gz
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\segmentation-rules.json.gz
-E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\PoC_Vit.Blazor.5zwgon9j89.wasm.gz
-E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\PoC_Vit.Blazor.rktyb9cnc7.pdb.gz
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\Microsoft.AspNetCore.Components.Authorization.dll
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\segmentation-rules.json
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\webcil\Microsoft.AspNetCore.Components.Authorization.wasm
@@ -1127,8 +1123,13 @@ E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\masyffvz4r-{
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\wyeko7u2fs-{0}-tptq2av103-tptq2av103.gz
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\7ljodm4hhb-{0}-lfu7j35m59-lfu7j35m59.gz
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\9flnnlstlr-{0}-ec9yy67949-ec9yy67949.gz
-E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\sptxb8xvdb-{0}-5zwgon9j89-5zwgon9j89.gz
-E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\p96zi1o4b1-{0}-rktyb9cnc7-rktyb9cnc7.gz
-E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\9ho9hb47j7-{0}-h2atzfhtma-h2atzfhtma.gz
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\staticwebassets.build.json.cache
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\swae.build.ex.cache
+E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\PoC_Vit.Blazor.sv7wss57hv.wasm
+E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\PoC_Vit.Blazor.h02rx64z3p.pdb
+E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\PoC_Vit.Blazor.sv7wss57hv.wasm.gz
+E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\PoC_Vit.Blazor.h02rx64z3p.pdb.gz
+E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\sptxb8xvdb-{0}-sv7wss57hv-sv7wss57hv.gz
+E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\p96zi1o4b1-{0}-h02rx64z3p-h02rx64z3p.gz
+E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\9ho9hb47j7-{0}-xb28dworua-xb28dworua.gz
+E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\staticwebassets.upToDateCheck.txt
