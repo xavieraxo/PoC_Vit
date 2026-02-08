@@ -45,9 +45,9 @@ builder.Services.AddScoped<ApiClient>();
 // Agregar servicios de Radzen
 builder.Services.AddRadzenComponents();
 
-// Autenticación
-builder.Services.AddAuthorizationCore();
-builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
-builder.Services.AddScoped<AuthService>();
+// Autenticación — deshabilitado temporalmente, se restaurará cuando se corrija el login
+// builder.Services.AddAuthorizationCore();
+// builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
+// builder.Services.AddScoped<AuthService>();
 
 await builder.Build().RunAsync();
