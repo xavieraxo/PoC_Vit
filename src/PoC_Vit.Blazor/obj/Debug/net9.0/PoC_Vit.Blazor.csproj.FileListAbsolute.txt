@@ -1125,10 +1125,10 @@ E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\PoC_Vit.Blazor.dll
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\refint\PoC_Vit.Blazor.dll
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\PoC_Vit.Blazor.pdb
 E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\ref\PoC_Vit.Blazor.dll
-E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\PoC_Vit.Blazor.i32jbimehv.wasm
-E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\PoC_Vit.Blazor.55u76c8grv.pdb
-E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\PoC_Vit.Blazor.i32jbimehv.wasm.gz
-E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\PoC_Vit.Blazor.55u76c8grv.pdb.gz
-E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\sptxb8xvdb-{0}-i32jbimehv-i32jbimehv.gz
-E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\p96zi1o4b1-{0}-55u76c8grv-55u76c8grv.gz
-E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\9ho9hb47j7-{0}-3p8a5mymdn-3p8a5mymdn.gz
+E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\PoC_Vit.Blazor.0ijpfifbur.wasm
+E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\PoC_Vit.Blazor.cg0ylxdf2x.pdb
+E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\PoC_Vit.Blazor.0ijpfifbur.wasm.gz
+E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\bin\Debug\net9.0\wwwroot\_framework\PoC_Vit.Blazor.cg0ylxdf2x.pdb.gz
+E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\sptxb8xvdb-{0}-0ijpfifbur-0ijpfifbur.gz
+E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\p96zi1o4b1-{0}-cg0ylxdf2x-cg0ylxdf2x.gz
+E:\Proyectos\PoC_Vit\src\PoC_Vit.Blazor\obj\Debug\net9.0\compressed\9ho9hb47j7-{0}-jj1r718egd-jj1r718egd.gz
