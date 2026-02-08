@@ -243,6 +243,22 @@ app.MapPost("/api/auth/login", async (LoginRequest req, NpgsqlDataSource db, ICo
     });
 });
 
+// Solo Development: resetea la contraseña del admin (llamar una vez si el login falla)
+app.MapPost("/api/auth/reset-admin", async (HttpContext ctx, NpgsqlDataSource db) =>
+{
+    if (!app.Environment.IsDevelopment())
+        return Results.NotFound();
+    var body = await ctx.Request.ReadFromJsonAsync<ResetAdminRequest>();
+    var newPassword = body?.Password?.Trim() ?? "Admin123!";
+    if (newPassword.Length < 6) return Results.BadRequest(new { error = "Contraseña mínimo 6 caracteres" });
+    var hash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+    await using var conn = await db.OpenConnectionAsync();
+    await using var cmd = new NpgsqlCommand("UPDATE users SET password_hash = @h WHERE username = 'admin'", conn);
+    cmd.Parameters.AddWithValue("h", hash);
+    var n = await cmd.ExecuteNonQueryAsync();
+    return n > 0 ? Results.Ok(new { ok = true, message = "Contraseña de admin actualizada. Usuario: admin" }) : Results.NotFound(new { error = "No existe usuario admin" });
+}).AllowAnonymous();
+
 // Crea conversación y devuelve su id
 app.MapPost("/api/conversations", async (NpgsqlDataSource db) =>
 {
@@ -747,6 +763,7 @@ app.Run();
 // ===================== Tipos y helpers =====================
 public record RegisterRequest(string Username, string Password, string? Role = "Patient", string? FullName = null);
 public record LoginRequest(string Username, string Password);
+public record ResetAdminRequest(string? Password);
 public record CreateAppointmentRequest(long ProfessionalId, DateTimeOffset StartUtc, string BookedBy, string? Notes);
 public record ChatRequest(string Message, Guid ConversationId = default);
 public record ChatResponse
