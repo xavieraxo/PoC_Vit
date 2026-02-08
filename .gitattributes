@@ -1,0 +1,13 @@
+# Normalizar finales de línea para que Git no muestre cambios falsos en Windows/Visual Studio
+* text=auto eol=lf
+
+# Archivos binarios: no tocar
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.dll binary
+*.exe binary
+*.zip binary
