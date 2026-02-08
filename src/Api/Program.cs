@@ -718,7 +718,11 @@ await using (var scope = app.Services.CreateAsyncScope())
     await using var cmd = new NpgsqlCommand(sqlInit, conn);
     await cmd.ExecuteNonQueryAsync();
 
-    // Crear admin por defecto si no existe
+    // Contraseña por defecto del admin (cámbiala en producción)
+    const string defaultAdminPassword = "Admin123!";
+    var adminHash = BCrypt.Net.BCrypt.HashPassword(defaultAdminPassword);
+
+    // Crear admin por defecto si no existe; si existe, actualizar contraseña al valor por defecto
     const string checkAdmin = "SELECT COUNT(*) FROM users WHERE username = 'admin'";
     await using var cmdCheck = new NpgsqlCommand(checkAdmin, conn);
     var count = (long)(await cmdCheck.ExecuteScalarAsync() ?? 0L);
@@ -726,8 +730,15 @@ await using (var scope = app.Services.CreateAsyncScope())
     {
         const string insertAdmin = "INSERT INTO users(username, password_hash, role, full_name) VALUES('admin', @h, 'Admin', 'Admin PoC')";
         await using var cmdIns = new NpgsqlCommand(insertAdmin, conn);
-        cmdIns.Parameters.AddWithValue("h", BCrypt.Net.BCrypt.HashPassword("admin123"));
+        cmdIns.Parameters.AddWithValue("h", adminHash);
         await cmdIns.ExecuteNonQueryAsync();
+    }
+    else
+    {
+        const string updateAdmin = "UPDATE users SET password_hash = @h WHERE username = 'admin'";
+        await using var cmdUpd = new NpgsqlCommand(updateAdmin, conn);
+        cmdUpd.Parameters.AddWithValue("h", adminHash);
+        await cmdUpd.ExecuteNonQueryAsync();
     }
 }
 
