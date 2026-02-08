@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PoC_Vit.Blazor")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8cdb72df7600457ece57266b0d8ab386075d06dd")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6b03c49025dc6573a9774f71a01117760f5c290b")]
 [assembly: System.Reflection.AssemblyProductAttribute("PoC_Vit.Blazor")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PoC_Vit.Blazor")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
